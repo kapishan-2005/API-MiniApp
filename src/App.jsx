@@ -3,39 +3,44 @@ import { useEffect, useState } from "react";
 function App() {
   const [users, setUsers] = useState([]);
 
-  useEffect(() => {
-    fetch("https://api.github.com/users")
-      .then((res) => res.json())
-      .then((data) => setUsers(data))
-      .catch((err) => console.error(err));
-  }, []);
+  // GitHub API fetch
+useEffect(() => {
+  fetch("https://api.github.com/users")
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error("Failed to fetch users");
+      }
+      return res.json();
+    })
+    .then((data) => setUsers(data))
+    .catch((error) => console.error(error));
+}, []);
+
 
   return (
-    <div className="min-h-screen bg-slate-900 p-6">
-      <h1 className="text-2xl font-bold text-white text-center mb-8">
-        React Application with GitHub API and useEffect
+    <div className="min-h-screen bg-gray-900 text-white p-6">
+      <h1 className="text-3xl font-bold text-center mb-6">
+        React Application with GitHub API
       </h1>
 
-      <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
         {users.map((user) => (
           <div
             key={user.id}
-            className="bg-white rounded-lg shadow-md p-4 text-center"
+            className="bg-gray-800 p-4 rounded-lg text-center hover:scale-105 transition"
           >
             <img
               src={user.avatar_url}
               alt={user.login}
-              className="w-20 h-20 rounded-full mx-auto mb-3"
+              className="w-20 h-20 mx-auto rounded-full mb-3"
             />
-
             <h2 className="font-semibold">{user.login}</h2>
-
             <a
               href={user.html_url}
               target="_blank"
-              className="text-blue-600 text-sm"
+              className="text-blue-400 text-sm"
             >
-              {user.html_url}
+              View Profile
             </a>
           </div>
         ))}
@@ -43,5 +48,4 @@ function App() {
     </div>
   );
 }
-
 export default App;
